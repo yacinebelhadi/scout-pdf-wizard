@@ -1,4 +1,3 @@
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -20,10 +19,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   groupName: z.string().min(2, "يجب أن يكون اسم الفوج أكثر من حرفين"),
   activityType: z.string().min(2, "يجب أن يكون نوع النشاط أكثر من حرفين"),
+  unit: z.string({
+    required_error: "يرجى اختيار الوحدة",
+  }),
   date: z.date({
     required_error: "يرجى اختيار تاريخ",
   }),
@@ -39,6 +48,7 @@ const DocumentForm = () => {
     defaultValues: {
       groupName: "",
       activityType: "",
+      unit: "",
       location: "",
       amount: "",
       participantsCount: "",
@@ -89,6 +99,30 @@ const DocumentForm = () => {
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="unit"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>الوحدة</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="text-right">
+                        <SelectValue placeholder="اختر الوحدة" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="أشبال">أشبال</SelectItem>
+                      <SelectItem value="كشاف">كشاف</SelectItem>
+                      <SelectItem value="كشاف متقدم">كشاف متقدم</SelectItem>
+                      <SelectItem value="جوالة">جوالة</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
