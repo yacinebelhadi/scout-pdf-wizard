@@ -1,3 +1,4 @@
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -26,6 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   groupName: z.string().min(2, "يجب أن يكون اسم الفوج أكثر من حرفين"),
@@ -39,10 +42,17 @@ const formSchema = z.object({
   location: z.string().min(2, "يجب إدخال المكان"),
   amount: z.string().min(1, "يجب إدخال مبلغ الإشتراك"),
   participantsCount: z.string().min(1, "يجب إدخال عدد المشاركين"),
+  supervisorName: z.string().min(2, "يجب إدخال اسم المشرف"),
+  contactNumber: z.string().min(8, "يجب إدخال رقم هاتف صحيح"),
+  startTime: z.string().min(1, "يجب إدخال وقت البداية"),
+  endTime: z.string().min(1, "يجب إدخال وقت النهاية"),
   description: z.string().min(10, "يجب أن يكون الوصف أكثر من 10 أحرف"),
 });
 
 const DocumentForm = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,13 +62,27 @@ const DocumentForm = () => {
       location: "",
       amount: "",
       participantsCount: "",
+      supervisorName: "",
+      contactNumber: "",
+      startTime: "",
+      endTime: "",
       description: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // TODO: Implement PDF generation
     console.log(values);
+    
+    // Simulating PDF generation
+    toast({
+      title: "تم إنشاء المستند",
+      description: "تم إنشاء المستند بنجاح وحفظه",
+    });
+    
+    // Simulate delay and redirect
+    setTimeout(() => {
+      navigate("/preview");
+    }, 1500);
   };
 
   return (
@@ -103,7 +127,9 @@ const DocumentForm = () => {
                 </FormItem>
               )}
             />
+          </div>
 
+          <div className="grid gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
               name="unit"
@@ -123,6 +149,25 @@ const DocumentForm = () => {
                       <SelectItem value="جوالة">جوالة</SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="supervisorName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>اسم المشرف</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="أدخل اسم المشرف"
+                      className="text-right"
+                      dir="rtl"
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -171,6 +216,44 @@ const DocumentForm = () => {
           <div className="grid gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
+              name="startTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>وقت البداية</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="time"
+                      className="text-right"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="endTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>وقت النهاية</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="time"
+                      className="text-right"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <FormField
+              control={form.control}
               name="location"
               render={({ field }) => (
                 <FormItem>
@@ -190,6 +273,28 @@ const DocumentForm = () => {
 
             <FormField
               control={form.control}
+              name="contactNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>رقم الاتصال</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="tel"
+                      placeholder="0000000000"
+                      className="text-right"
+                      dir="rtl"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <FormField
+              control={form.control}
               name="participantsCount"
               render={({ field }) => (
                 <FormItem>
@@ -207,27 +312,27 @@ const DocumentForm = () => {
                 </FormItem>
               )}
             />
-          </div>
 
-          <FormField
-            control={form.control}
-            name="amount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>مبلغ الإشتراك</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="0"
-                    className="text-right"
-                    dir="rtl"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>مبلغ الإشتراك</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="0"
+                      className="text-right"
+                      dir="rtl"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FormField
             control={form.control}
@@ -238,7 +343,7 @@ const DocumentForm = () => {
                 <FormControl>
                   <Textarea
                     placeholder="اكتب وصفاً مختصراً للنشاط"
-                    className="text-right"
+                    className="text-right min-h-[120px]"
                     dir="rtl"
                     {...field}
                   />
