@@ -1,5 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Activities from "./presentation/Activities";
+import ScoutHistory from "./presentation/ScoutHistory";
 
 const Presentation = () => {
   return (
@@ -18,8 +20,9 @@ const Presentation = () => {
           </p>
         </CardContent>
       </Card>
-
-      {/* We'll add more presentation content later as needed */}
+      
+      <ScoutHistory />
+      <Activities />
     </div>
   );
 };
